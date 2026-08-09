@@ -13,4 +13,3 @@ public enum PaymentEvent {
     CANCEL,
     CAPTURE_TIMEOUT
 }
-

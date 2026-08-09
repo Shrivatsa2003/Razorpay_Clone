@@ -1,14 +1,25 @@
 package com.shrivatsa.Razorpay.merchant.entity;
 
 
+import com.shrivatsa.Razorpay.common.entity.BaseEntity;
 import com.shrivatsa.Razorpay.common.enums.Environment;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "api_key")
-public class ApiKey {
+
+@Table(name = "api_key",
+        indexes = {
+                @Index(name = "idx_api_key_merchant_env", columnList = "merchant_id, environment, enabled")
+        })
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ApiKey extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -24,16 +35,21 @@ public class ApiKey {
     @Column(nullable = false, length = 200)
     private String keySecretHash;
 
+    @Column(length = 200)
+    public String previousKeySecretHash;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private Environment environment;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean enabled = true;
 
 
     private java.time.LocalDateTime lastUsedAt;
     private java.time.LocalDateTime rotatedAt;
     private java.time.LocalDateTime gracePeriodExpiresAt;
+
 }
 

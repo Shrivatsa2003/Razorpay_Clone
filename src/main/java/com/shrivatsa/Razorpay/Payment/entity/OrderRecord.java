@@ -1,8 +1,10 @@
 package com.shrivatsa.Razorpay.Payment.entity;
 
+import com.shrivatsa.Razorpay.common.entity.BaseEntity;
+import com.shrivatsa.Razorpay.common.entity.Money;
 import com.shrivatsa.Razorpay.common.enums.OrderStatus;
-import com.shrivatsa.Razorpay.common.enums.entity.Money;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -11,8 +13,16 @@ import java.util.Map;
 import java.util.UUID;
 
 @Entity
-@Table(name = "order_record")
-public class OrderRecord {
+@Table(name = "order_record", indexes = {
+        @Index(name = "idx_order_id_merchant_id", columnList = "id, merchant_id"),
+        @Index(name = "idx_order_merchant_id", columnList = "merchant_id")
+})
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class OrderRecord  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,11 +35,16 @@ public class OrderRecord {
     @Embedded
     private Money amount;
 
+    @Column(nullable = true)
+    String receipt;
+
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private OrderStatus orderStatus = OrderStatus.CREATED;
 
     @Column(nullable = false)
+    @Builder.Default
     private Integer attempts = 0;
 
     @JdbcTypeCode((SqlTypes.JSON))
