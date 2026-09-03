@@ -12,13 +12,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class NetBankingAdapter implements PaymentAdapter {
     private final PaymentProcessorRouter paymentProcessorRouter;
 
-    private final PaymentProcessor paymentProcessor;
     @Override
     public PaymentResult initiate(PaymentRequest request) {
         log.info("initiate payment for the payment method"+request.method());
@@ -47,5 +48,11 @@ public class NetBankingAdapter implements PaymentAdapter {
             log.warn("NetBanking failed, paymentId: {}", request.paymentId());
             return new PaymentResult.Failure("NBK_FAILED", e.getMessage());
         }
+
+    }
+
+    @Override
+    public PaymentResult capture(UUID paymentId) {
+        return new PaymentResult.Success("NBK_REF");
     }
 }

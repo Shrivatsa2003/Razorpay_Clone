@@ -5,7 +5,12 @@ import com.shrivatsa.Razorpay.Payment.processor.PaymentProcessor;
 import com.shrivatsa.Razorpay.Payment.processor.dto.PaymentProcessorRequest;
 import com.shrivatsa.Razorpay.Payment.processor.dto.PaymentProcessorResponse;
 import com.shrivatsa.Razorpay.common.util.RandomizerUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
+
+@Component
+@Slf4j
 public class UpiPaymentProcessor implements PaymentProcessor {
 
     @Override
@@ -24,8 +29,7 @@ public class UpiPaymentProcessor implements PaymentProcessor {
 
         String processorRef = "UPI_PROCESSOR_"+ RandomizerUtil.randomBase64(16);
 
-        String bankRef = "BANK_REF"+ RandomizerUtil.randomBase64(16);
 
-        return new PaymentProcessorResponse.Success(processorRef, bankRef);
+        return new PaymentProcessorResponse.Pending(processorRef);
     }
 }
